@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>CivicAI - AI Analysis</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+
+        <div class="logo">
+            CivicAI
+        </div>
+
+        <div class="nav-links">
+            <a href="dashboard.html">Dashboard</a>
+            <a href="complaint.html">Report Issue</a>
+            <a href="login.html">Logout</a>
+        </div>
+
+    </nav>
+
+
+    <!-- Main Content -->
+    <main class="dashboard-container">
+
+        <div class="result-header">
+
+            <h1>Complaint Submitted Successfully ✅</h1>
+
+            <p>
+                CivicAI has analyzed your complaint.
+            </p>
+
+        </div>
+
+
+        <!-- Complaint Summary -->
+        <section class="result-card">
+
+            <h2>Complaint</h2>
+
+            <div class="complaint-summary">
+
+                <h3>Open Manhole Near School</h3>
+
+                <p>
+                    An open manhole has been reported near the
+                    school entrance. Children are walking nearby.
+                </p>
+
+                <p>
+                    <strong>Location:</strong>
+                    Main Road, Near School
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- AI Analysis -->
+        <section class="result-card">
+
+            <div class="ai-heading">
+
+                <div>
+                    <h2>🤖 CivicAI Analysis</h2>
+
+                    <p>
+                        AI-assisted assessment of your complaint
+                    </p>
+                </div>
+
+                <span class="ai-badge">
+                    AI Analyzed
+                </span>
+
+            </div>
+
+
+            <div class="ai-results-grid">
+
+                <div class="ai-result">
+
+                    <span>Category</span>
+
+                    <strong>
+                        Public Safety
+                    </strong>
+
+                </div>
+
+
+                <div class="ai-result">
+
+                    <span>Urgency</span>
+
+                    <strong class="critical-text">
+                        Critical
+                    </strong>
+
+                </div>
+
+
+                <div class="ai-result">
+
+                    <span>Priority Score</span>
+
+                    <strong>
+                        96 / 100
+                    </strong>
+
+                </div>
+
+
+                <div class="ai-result">
+
+                    <span>Credibility Score</span>
+
+                    <strong>
+                        94 / 100
+                    </strong>
+
+                </div>
+
+
+                <div class="ai-result">
+
+                    <span>Duplicate Check</span>
+
+                    <strong>
+                        No Duplicate
+                    </strong>
+
+                </div>
+
+
+                <div class="ai-result">
+
+                    <span>Recommended Department</span>
+
+                    <strong>
+                        Public Works
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- Status -->
+        <section class="result-card">
+
+            <h2>Complaint Status</h2>
+
+            <div class="status-timeline">
+
+                <div class="timeline-item active">
+                    <span>✓</span>
+                    <div>
+                        <strong>Submitted</strong>
+                        <p>Your complaint was received.</p>
+                    </div>
+                </div>
+
+
+                <div class="timeline-item active">
+                    <span>✓</span>
+                    <div>
+                        <strong>AI Analysis</strong>
+                        <p>CivicAI analyzed the complaint.</p>
+                    </div>
+                </div>
+
+
+                <div class="timeline-item current">
+                    <span>●</span>
+                    <div>
+                        <strong>Needs Review</strong>
+                        <p>Awaiting administrative verification.</p>
+                    </div>
+                </div>
+
+
+                <div class="timeline-item">
+                    <span>○</span>
+                    <div>
+                        <strong>Assigned</strong>
+                        <p>Department assignment pending.</p>
+                    </div>
+                </div>
+
+
+                <div class="timeline-item">
+                    <span>○</span>
+                    <div>
+                        <strong>Resolved</strong>
+                        <p>Issue will be marked resolved after action.</p>
+                    </div>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <div class="result-actions">
+
+            <a href="dashboard.html" class="primary-btn">
+                Back to Dashboard
+            </a>
+
+            <a href="complaint.html" class="secondary-btn">
+                Report Another Issue
+            </a>
+
+        </div>
+
+    </main>
+
+</body>
+
+</html>

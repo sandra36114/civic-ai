@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CivicAI - Citizen Dashboard</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="logo">CivicAI</div>
+
+        <div class="nav-links">
+            <a href="#">Dashboard</a>
+            <a href="complaint.html">Report Issue</a>
+            <a href="login.html">Logout</a>
+        </div>
+    </nav>
+
+
+    <!-- Main Dashboard -->
+    <main class="dashboard-container">
+
+        <section class="welcome-section">
+            <div>
+                <h1>Welcome, Citizen 👋</h1>
+                <p>Help make your community safer and better.</p>
+            </div>
+
+            <a href="complaint.html" class="primary-btn">
+                + Report an Issue
+            </a>
+        </section>
+
+
+        <!-- Statistics -->
+        <section class="stats-grid">
+
+            <div class="stat-card">
+                <h3>5</h3>
+                <p>Total Complaints</p>
+            </div>
+
+            <div class="stat-card">
+                <h3>2</h3>
+                <p>In Progress</p>
+            </div>
+
+            <div class="stat-card">
+                <h3>3</h3>
+                <p>Resolved</p>
+            </div>
+
+        </section>
+
+
+        <!-- Complaints -->
+        <section class="complaints-section">
+
+            <div class="section-heading">
+                <h2>My Complaints</h2>
+                <span>Recent reports</span>
+            </div>
+
+
+            <!-- Complaint 1 -->
+            <div class="complaint-card">
+
+                <div class="complaint-info">
+                    <h3>Open Manhole Near School</h3>
+
+                    <p>
+                        An open manhole has been reported near the
+                        school entrance.
+                    </p>
+
+                    <span class="category">
+                        Public Safety
+                    </span>
+                </div>
+
+                <div class="complaint-status">
+
+                    <strong class="priority-critical">
+                        Priority: 96
+                    </strong>
+
+                    <span class="status progress">
+                        In Progress
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- Complaint 2 -->
+            <div class="complaint-card">
+
+                <div class="complaint-info">
+                    <h3>Garbage Not Collected</h3>
+
+                    <p>
+                        Garbage has not been collected for several days.
+                    </p>
+
+                    <span class="category">
+                        Sanitation
+                    </span>
+                </div>
+
+                <div class="complaint-status">
+
+                    <strong class="priority-high">
+                        Priority: 72
+                    </strong>
+
+                    <span class="status resolved">
+                        Resolved
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- Complaint 3 -->
+            <div class="complaint-card">
+
+                <div class="complaint-info">
+                    <h3>Street Light Not Working</h3>
+
+                    <p>
+                        Street light is not working near the main road.
+                    </p>
+
+                    <span class="category">
+                        Electricity
+                    </span>
+                </div>
+
+                <div class="complaint-status">
+
+                    <strong class="priority-medium">
+                        Priority: 55
+                    </strong>
+
+                    <span class="status submitted">
+                        Submitted
+                    </span>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</body>
+</html>

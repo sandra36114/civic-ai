@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>CivicAI - Report an Issue</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+    <nav class="navbar">
+
+        <div class="logo">CivicAI</div>
+
+        <div class="nav-links">
+            <a href="dashboard.html">Dashboard</a>
+            <a href="login.html">Logout</a>
+        </div>
+
+    </nav>
+
+
+    <main class="dashboard-container">
+
+        <div class="auth-card complaint-form-card">
+
+            <h2>Report a Civic Issue</h2>
+
+            <p class="subtitle">
+                Describe the problem clearly. CivicAI will analyze
+                your complaint and prioritize it.
+            </p>
+
+
+            <form onsubmit="submitComplaint(event)"></form>
+
+                <label>Complaint Description</label>
+
+                
+                <textarea
+                    id="description"
+                    rows="6"
+                    placeholder="Describe the issue in detail..."
+                    required></textarea>
+                   
+
+                <label>Location</label>
+
+                <input
+                     id="location"
+                     type="text"
+                    placeholder="Enter the location"
+                    required>
+                    
+
+
+                <label>Issue Category</label>
+
+                <select>
+
+                    <option value="">Select category</option>
+
+                    <option>Road</option>
+                    <option>Water</option>
+                    <option>Garbage</option>
+                    <option>Streetlight</option>
+                    <option>Public Safety</option>
+                    <option>Traffic</option>
+                    <option>Electricity</option>
+                    <option>Other</option>
+
+                </select>
+
+
+                <label>Upload Evidence</label>
+
+                <input
+                    type="file"
+                    accept="image/*">
+
+
+                <button type="submit">
+                    Submit Complaint
+                </button>
+
+            </form>
+
+        </div>
+
+    </main>
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
