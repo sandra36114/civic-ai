@@ -107,12 +107,10 @@ def calculate_similarity(text1, text2):
 
 def calculate_credibility(description, location=None, has_evidence=False):
     score = 50
-
     description = clean_text(description)
-
-    # More descriptive complaints receive a small positive signal
     word_count = len(description.split())
 
+    # More detailed descriptions are easier to verify
     if word_count >= 15:
         score += 15
     elif word_count >= 8:
@@ -120,15 +118,24 @@ def calculate_credibility(description, location=None, has_evidence=False):
     elif word_count < 4:
         score -= 15
 
-    # Location increases confidence
+    # Location helps administrators verify the complaint
     if location:
         score += 15
 
-    # Supporting evidence increases confidence
+    # Evidence such as an uploaded image increases verification confidence
     if has_evidence:
         score += 10
 
-    return max(0, min(score, 100))
+    score = max(0, min(score, 100))
+
+    if score >= 75:
+        verification = "High"
+    elif score >= 50:
+        verification = "Medium"
+    else:
+        verification = "Needs Review"
+
+    return score, verification
 def predict_category(text):
     text = clean_text(text)
 
@@ -202,11 +209,11 @@ def analyze_complaint(
     priority = calculate_priority(urgency, category)
 
     # 4. Calculate credibility
-    credibility = calculate_credibility(
-        description,
-        location,
-        has_evidence
-    )
+    credibility, verification = calculate_credibility(
+    description,
+    location,
+    has_evidence
+)
 
     # 5. Check for duplicates
     duplicate = False
@@ -228,51 +235,22 @@ def analyze_complaint(
 
     # Final AI result
     return {
+    "category": category,
+    "urgency": urgency,
+    "priority": priority,
+    "credibility": credibility,
+    "verification": verification,
+    "duplicate": duplicate,
+    "duplicate_similarity": duplicate_similarity,
+    "duplicate_message": duplicate_message
+}
+    return {
         "category": category,
         "urgency": urgency,
         "priority": priority,
         "credibility": credibility,
+        "verification": verification,
         "duplicate": duplicate,
         "duplicate_similarity": duplicate_similarity,
         "duplicate_message": duplicate_message
     }
-if __name__ == "__main__":
-
-    test_complaints = [
-        "There is an open manhole near a school and children are walking nearby.",
-        "Garbage has not been collected for five days.",
-        "There is a large pothole on the main road.",
-        "The streetlight near my house is not working.",
-        "There is water leakage from the pipeline."
-    ]
-
-    for complaint in test_complaints:
-        print("\nComplaint:", complaint)
-        print("Analysis:", analyze_complaint(complaint))
-        complaint1 = "There is a huge pothole near the central bus stop."
-
-complaint2 = "A large pothole is present near the bus stop."
-
-similarity = calculate_similarity(complaint1, complaint2)
-
-print("\nDuplicate Test")
-print("Similarity:", similarity)
-credibility = calculate_credibility(
-    "There is an open manhole near the school entrance and children are walking nearby.",
-    location="School Road",
-    has_evidence=True
-)
-
-print("\nCredibility Test")
-print("Credibility:", credibility)
-result = analyze_complaint(
-    "There is an open manhole near the school entrance and children are walking nearby.",
-    location="School Road",
-    has_evidence=True,
-    previous_complaints=[
-        "There is an open manhole near the school entrance."
-    ]
-)
-
-print("\nFINAL AI ANALYSIS")
-print(result)
