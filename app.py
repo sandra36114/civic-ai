@@ -254,6 +254,81 @@ def get_user_complaints(user_id):
         dict(complaint) for complaint in complaints
     ])
 
+@app.route("/api/admin/complaints", methods=["GET"])
+def get_admin_complaints():
+    conn = get_db()
+
+    complaints = conn.execute("""
+        SELECT
+            complaints.id,
+            complaints.description,
+            complaints.location,
+            complaints.category,
+            complaints.urgency,
+            complaints.priority,
+            complaints.credibility,
+            complaints.is_duplicate,
+            complaints.status,
+            complaints.department,
+            complaints.created_at,
+            users.name AS citizen_name,
+            users.email AS citizen_email
+        FROM complaints
+        JOIN users ON complaints.user_id = users.id
+        ORDER BY complaints.priority DESC, complaints.created_at DESC
+    """).fetchall()
+
+    conn.close()
+
+    return jsonify([
+        dict(complaint) for complaint in complaints
+    ])
+
+@app.route("/api/admin/stats", methods=["GET"])
+def get_admin_stats():
+    conn = get_db()
+
+    total_complaints = conn.execute(
+        "SELECT COUNT(*) FROM complaints"
+    ).fetchone()[0]
+
+    critical_complaints = conn.execute(
+        "SELECT COUNT(*) FROM complaints WHERE urgency = 'Critical'"
+    ).fetchone()[0]
+
+    high_priority = conn.execute(
+        "SELECT COUNT(*) FROM complaints WHERE priority >= 70"
+    ).fetchone()[0]
+
+    pending_review = conn.execute(
+        """
+        SELECT COUNT(*)
+        FROM complaints
+        WHERE status = 'Needs Review'
+        """
+    ).fetchone()[0]
+
+    resolved_complaints = conn.execute(
+        """
+        SELECT COUNT(*)
+        FROM complaints
+        WHERE status = 'Resolved'
+        """
+    ).fetchone()[0]
+
+    conn.close()
+
+    return jsonify({
+        "status": "success",
+        "stats": {
+            "total_complaints": total_complaints,
+            "critical_complaints": critical_complaints,
+            "high_priority": high_priority,
+            "pending_review": pending_review,
+            "resolved_complaints": resolved_complaints
+        }
+    })
+
 if __name__ == "__main__":
     init_db()
     app.run(debug=True)
