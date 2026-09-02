@@ -21,32 +21,53 @@
             <h2>Create Account</h2>
             <p class="subtitle">Join CivicAI and report genuine civic issues</p>
 
-            <form>
+            <form onsubmit="registerUser(event)">
+    <label>Full Name</label>
+    <input
+        id="name"
+        type="text"
+        placeholder="Enter your name"
+        required
+    >
 
-                <label>Full Name</label>
-                <input type="text" placeholder="Enter your name" required>
+    <label>Email</label>
+    <input
+        id="email"
+        type="email"
+        placeholder="Enter your email"
+        required
+    >
 
-                <label>Email</label>
-                <input type="email" placeholder="Enter your email" required>
+    <label>Password</label>
+    <input
+        id="password"
+        type="password"
+        placeholder="Create a password"
+        required
+    >
 
-                <label>Password</label>
-                <input type="password" placeholder="Create a password" required>
+    <label>Confirm Password</label>
+    <input
+        id="confirmPassword"
+        type="password"
+        placeholder="Confirm your password"
+        required
+    >
 
-                <label>Confirm Password</label>
-                <input type="password" placeholder="Confirm your password" required>
+    <button type="submit">Create Account</button>
+</form>
 
-                <button type="submit">Create Account</button>
-
-            </form>
+               
 
             <p class="switch-page">
                 Already have an account?
-                <a href="login.html">Login</a>
+            <a href="/login">Login</a>
+                
             </p>
 
         </div>
 
     </div>
-
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </body>
 </html>
