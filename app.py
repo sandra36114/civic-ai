@@ -172,6 +172,88 @@ def get_complaints():
         dict(complaint) for complaint in complaints
     ])
 
+@app.route("/api/complaints/<int:complaint_id>/status", methods=["PUT"])
+def update_complaint_status(complaint_id):
+    data = request.get_json()
+
+    status = data.get("status")
+    department = data.get("department")
+
+    allowed_statuses = [
+        "Submitted",
+        "Needs Review",
+        "Verified",
+        "Assigned",
+        "In Progress",
+        "Resolved"
+    ]
+
+    if status not in allowed_statuses:
+        return jsonify({
+            "status": "error",
+            "message": "Invalid complaint status"
+        }), 400
+
+    conn = get_db()
+
+    complaint = conn.execute(
+        "SELECT id FROM complaints WHERE id = ?",
+        (complaint_id,)
+    ).fetchone()
+
+    if not complaint:
+        conn.close()
+        return jsonify({
+            "status": "error",
+            "message": "Complaint not found"
+        }), 404
+
+    conn.execute(
+        """
+        UPDATE complaints
+        SET status = ?,
+            department = COALESCE(?, department)
+        WHERE id = ?
+        """,
+        (status, department, complaint_id)
+    )
+
+    conn.commit()
+    conn.close()
+
+    return jsonify({
+        "status": "success",
+        "message": "Complaint updated successfully"
+    })
+
+@app.route("/api/users/<int:user_id>/complaints", methods=["GET"])
+def get_user_complaints(user_id):
+    conn = get_db()
+
+    complaints = conn.execute("""
+        SELECT
+            id,
+            description,
+            location,
+            category,
+            urgency,
+            priority,
+            credibility,
+            is_duplicate,
+            status,
+            department,
+            created_at
+        FROM complaints
+        WHERE user_id = ?
+        ORDER BY created_at DESC
+    """, (user_id,)).fetchall()
+
+    conn.close()
+
+    return jsonify([
+        dict(complaint) for complaint in complaints
+    ])
+
 if __name__ == "__main__":
     init_db()
     app.run(debug=True)
