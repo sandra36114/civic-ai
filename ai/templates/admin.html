@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>CivicAI - Admin Dashboard</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+
+<body>
+
+    <nav class="navbar">
+
+        <div class="logo">
+            CivicAI
+        </div>
+
+        <div class="nav-links">
+
+            <a href="/admin">Admin Dashboard</a>
+                Admin Dashboard
+            </a>
+
+            <a href="/login">Logout</a>
+                Logout
+            </a>
+
+        </div>
+
+    </nav>
+
+
+    <main class="dashboard-container">
+
+
+        <!-- Header -->
+
+        <section class="welcome-section">
+
+            <div>
+
+                <h1>Admin Dashboard</h1>
+
+                <p>
+                    AI-powered complaint management and prioritization
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- Statistics -->
+
+        <section class="stats-grid">
+
+            <div class="stat-card">
+
+                <h3>108</h3>
+
+                <p>Total Complaints</p>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <h3>8</h3>
+
+                <p>Critical Issues</p>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <h3>32</h3>
+
+                <p>Pending Review</p>
+
+            </div>
+
+        </section>
+
+
+        <!-- Priority Queue -->
+
+        <section class="complaints-section">
+
+            <div class="section-heading">
+
+                <h2>AI Priority Queue</h2>
+
+                <span>
+                    Highest priority first
+                </span>
+
+            </div>
+
+
+            <!-- Critical -->
+
+            <div class="complaint-card">
+
+                <div class="complaint-info">
+
+                    <h3>
+                        🚨 Open Manhole Near School
+                    </h3>
+
+                    <p>
+                        Dangerous open manhole reported
+                        near a school entrance.
+                    </p>
+
+                    <span class="category">
+                        Public Safety
+                    </span>
+
+                </div>
+
+
+                <div class="complaint-status">
+
+                    <strong class="priority-critical">
+                        96 / 100
+                    </strong>
+
+                    <span class="status progress">
+                        Needs Review
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- High -->
+
+            <div class="complaint-card">
+
+                <div class="complaint-info">
+
+                    <h3>
+                        Major Water Leakage
+                    </h3>
+
+                    <p>
+                        Large water leakage affecting
+                        nearby households.
+                    </p>
+
+                    <span class="category">
+                        Water
+                    </span>
+
+                </div>
+
+
+                <div class="complaint-status">
+
+                    <strong class="priority-high">
+                        82 / 100
+                    </strong>
+
+                    <span class="status submitted">
+                        Verified
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- Medium -->
+
+            <div class="complaint-card">
+
+                <div class="complaint-info">
+
+                    <h3>
+                        Garbage Not Collected
+                    </h3>
+
+                    <p>
+                        Garbage accumulation reported
+                        in residential area.
+                    </p>
+
+                    <span class="category">
+                        Sanitation
+                    </span>
+
+                </div>
+
+
+                <div class="complaint-status">
+
+                    <strong class="priority-medium">
+                        61 / 100
+                    </strong>
+
+                    <span class="status progress">
+                        Assigned
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- Low -->
+
+            <div class="complaint-card">
+
+                <div class="complaint-info">
+
+                    <h3>
+                        Broken Park Bench
+                    </h3>
+
+                    <p>
+                        A damaged bench has been reported
+                        in the public park.
+                    </p>
+
+                    <span class="category">
+                        Public Facilities
+                    </span>
+
+                </div>
+
+
+                <div class="complaint-status">
+
+                    <strong>
+                        25 / 100
+                    </strong>
+
+                    <span class="status resolved">
+                        Low Priority
+                    </span>
+
+                </div>
+
+            </div>
+
+
+        </section>
+
+
+    </main>
+
+</body>
+
+</html>
