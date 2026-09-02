@@ -1,5 +1,6 @@
 from flask import Flask, jsonify, request
 from database import init_db, get_db
+from ai.predictor import analyze_complaint
 
 app = Flask(__name__)
 
@@ -110,6 +111,7 @@ def create_complaint():
     user_id = data.get("user_id")
     description = data.get("description")
     location = data.get("location")
+    has_evidence = data.get("has_evidence", False)
 
     if not user_id or not description or not location:
         return jsonify({
@@ -119,16 +121,52 @@ def create_complaint():
 
     conn = get_db()
 
+    # Get previous complaints for duplicate detection
+    previous_rows = conn.execute(
+        "SELECT description FROM complaints"
+    ).fetchall()
+
+    previous_complaints = [
+        row["description"] for row in previous_rows
+    ]
+
+    # Run AI analysis
+    analysis = analyze_complaint(
+        description=description,
+        location=location,
+        has_evidence=has_evidence,
+        previous_complaints=previous_complaints
+    )
+
+    # Insert complaint with AI results
     cursor = conn.execute(
         """
         INSERT INTO complaints (
             user_id,
             description,
-            location
+            location,
+            category,
+            urgency,
+            priority,
+            credibility,
+            is_duplicate,
+            status,
+            department
         )
-        VALUES (?, ?, ?)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """,
-        (user_id, description, location)
+        (
+            user_id,
+            description,
+            location,
+            analysis["category"],
+            analysis["urgency"],
+            analysis["priority"],
+            analysis["credibility"],
+            int(analysis["duplicate"]),
+            "Needs Review",
+            analysis["category"] + " Department"
+        )
     )
 
     conn.commit()
@@ -139,8 +177,9 @@ def create_complaint():
 
     return jsonify({
         "status": "success",
-        "message": "Complaint submitted successfully",
-        "complaint_id": complaint_id
+        "message": "Complaint submitted and analyzed successfully",
+        "complaint_id": complaint_id,
+        "ai_analysis": analysis
     }), 201
 
 @app.route("/api/complaints", methods=["GET"])
