@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>CivicAI - AI Analysis</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+    <nav class="navbar">
+
+        <div class="logo">
+            CivicAI
+        </div>
+
+        <div class="nav-links">
+            <a href="/dashboard">Dashboard</a>
+            <a href="/complaint">Report Issue</a>
+            <a href="/login">Logout</a>
+        </div>
+
+    </nav>
+
+
+    <main class="dashboard-container">
+
+        <div class="result-header">
+
+            <h1>Complaint Submitted Successfully</h1>
+
+            <p>
+                CivicAI has analyzed your complaint.
+            </p>
+
+        </div>
+
+
+        <section class="result-card">
+
+            <h2>Complaint</h2>
+
+            <div class="complaint-summary">
+
+                <h3>Complaint #{{ complaint.id }}</h3>
+
+                <p>
+                    {{ complaint.description }}
+                </p>
+
+                <p>
+                    <strong>Location:</strong>
+                    {{ complaint.location }}
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <section class="result-card">
+
+            <div class="ai-heading">
+
+                <div>
+                    <h2>CivicAI Analysis</h2>
+
+                    <p>
+                        AI-assisted assessment of your complaint
+                    </p>
+                </div>
+
+                <span class="ai-badge">
+                    AI Analyzed
+                </span>
+
+            </div>
+
+
+            <div class="ai-results-grid">
+
+                <div class="ai-result">
+                    <span>Category</span>
+                    <strong>{{ complaint.category }}</strong>
+                </div>
+
+                <div class="ai-result">
+                    <span>Urgency</span>
+                    <strong class="{{ 'critical-text' if complaint.urgency == 'Critical' else '' }}">
+                        {{ complaint.urgency }}
+                    </strong>
+                </div>
+
+                <div class="ai-result">
+                    <span>Priority Score</span>
+                    <strong>{{ complaint.priority }} / 100</strong>
+                </div>
+
+                <div class="ai-result">
+                    <span>Credibility Score</span>
+                    <strong>{{ complaint.credibility }} / 100</strong>
+                </div>
+
+                <div class="ai-result">
+                    <span>Duplicate Check</span>
+                    <strong>{{ "Duplicate Found" if complaint.is_duplicate else "No Duplicate" }}</strong>
+                </div>
+
+                <div class="ai-result">
+                    <span>Recommended Department</span>
+                    <strong>{{ complaint.department }}</strong>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <section class="result-card">
+
+            <h2>Complaint Status</h2>
+
+            <div class="status-timeline">
+
+                <div class="timeline-item active">
+                    <span>OK</span>
+                    <div>
+                        <strong>Submitted</strong>
+                        <p>Your complaint was received.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item active">
+                    <span>OK</span>
+                    <div>
+                        <strong>AI Analysis</strong>
+                        <p>CivicAI analyzed the complaint.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item current">
+                    <span>Now</span>
+                    <div>
+                        <strong>{{ complaint.status }}</strong>
+                        <p>Awaiting administrative verification.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <span>Next</span>
+                    <div>
+                        <strong>Assigned</strong>
+                        <p>Department assignment pending.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <span>Next</span>
+                    <div>
+                        <strong>Resolved</strong>
+                        <p>Issue will be marked resolved after action.</p>
+                    </div>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <div class="result-actions">
+            <a href="/dashboard" class="primary-btn">Back to Dashboard</a>
+            <a href="/complaint" class="secondary-btn">Report Another Issue</a>
+        </div>
+
+    </main>
+
+</body>
+
+</html>

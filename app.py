@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, render_template
 from database import init_db, get_db
 from ai.predictor import analyze_complaint
 
@@ -9,8 +9,61 @@ app.secret_key = "civicai-secret-key"
 
 @app.route("/")
 def home():
-    return "CivicAI Backend is running! 🚀"
+    return render_template("login.html")
 
+@app.route("/login")
+def login_page():
+    return render_template("login.html")
+
+@app.route("/register")
+def register_page():
+    return render_template("register.html")
+
+@app.route("/dashboard")
+def dashboard():
+    return render_template("dashboard.html")
+
+@app.route("/complaint")
+def complaint_page():
+    return render_template("complaint.html")
+
+@app.route("/admin")
+def admin_page():
+    return render_template("admin.html")
+
+@app.route("/complaint-result/<int:complaint_id>")
+def complaint_result(complaint_id):
+    conn = get_db()
+
+    complaint = conn.execute(
+        """
+        SELECT
+            id,
+            description,
+            location,
+            category,
+            urgency,
+            priority,
+            credibility,
+            is_duplicate,
+            status,
+            department,
+            created_at
+        FROM complaints
+        WHERE id = ?
+        """,
+        (complaint_id,)
+    ).fetchone()
+
+    conn.close()
+
+    if not complaint:
+        return "Complaint not found", 404
+
+    return render_template(
+        "complaint_result.html",
+        complaint=dict(complaint)
+    )
 
 @app.route("/api/health")
 def health():
@@ -367,6 +420,152 @@ def get_admin_stats():
             "resolved_complaints": resolved_complaints
         }
     })
+@app.route("/submit-complaint", methods=["POST"])
+def submit_complaint():
+
+    user_id = request.form.get("user_id")
+    description = request.form.get("description")
+    location = request.form.get("location")
+    has_evidence = request.form.get("has_evidence") == "true"
+
+    if not user_id or not description or not location:
+        return "Missing required information", 400
+
+    conn = get_db()
+
+    previous_rows = conn.execute(
+        "SELECT description FROM complaints"
+    ).fetchall()
+
+    previous_complaints = [
+        row["description"] for row in previous_rows
+    ]
+
+    analysis = analyze_complaint(
+        description=description,
+        location=location,
+        has_evidence=has_evidence,
+        previous_complaints=previous_complaints
+    )
+
+    conn.execute("""
+        INSERT INTO complaints (
+            user_id,
+            description,
+            location,
+            category,
+            urgency,
+            priority,
+            credibility,
+            is_duplicate,
+            status,
+            department
+        )
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    """, (
+        int(user_id),
+        description,
+        location,
+        analysis["category"],
+        analysis["urgency"],
+        analysis["priority"],
+        analysis["credibility"],
+        int(analysis["duplicate"]),
+        "Needs Review",
+        analysis["category"] + " Department"
+    ))
+
+    conn.commit()
+    conn.close()
+
+    return f"""
+    <html>
+    <head>
+        <title>CivicAI - Complaint Submitted</title>
+        <style>
+            body {{
+                font-family: Arial, sans-serif;
+                background: #f3f6fa;
+                text-align: center;
+                padding-top: 100px;
+            }}
+
+            .card {{
+                background: white;
+                width: 500px;
+                margin: auto;
+                padding: 40px;
+                border-radius: 18px;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            }}
+
+            h1 {{
+                color: #1565c0;
+            }}
+
+            .result {{
+                text-align: left;
+                margin-top: 25px;
+                font-size: 18px;
+                line-height: 1.8;
+            }}
+
+            a {{
+                display: inline-block;
+                margin-top: 25px;
+                padding: 12px 25px;
+                background: #1565c0;
+                color: white;
+                text-decoration: none;
+                border-radius: 8px;
+            }}
+        </style>
+    </head>
+
+    <body>
+
+        <div class="card">
+
+            <h1>Complaint Submitted! ✅</h1>
+
+            <p>CivicAI has analyzed your complaint.</p>
+
+            <div class="result">
+
+                <b>Category:</b>
+                {analysis["category"]}
+
+                <br>
+
+                <b>Urgency:</b>
+                {analysis["urgency"]}
+
+                <br>
+
+                <b>Priority:</b>
+                {analysis["priority"]}/100
+
+                <br>
+
+                <b>Credibility:</b>
+                {analysis["credibility"]}/100
+
+                <br>
+
+                <b>Duplicate:</b>
+                {"Yes" if analysis["duplicate"] else "No"}
+
+            </div>
+
+            <a href="/dashboard">
+                Go to Dashboard
+            </a>
+
+        </div>
+
+    </body>
+    </html>
+    """
 
 if __name__ == "__main__":
     init_db()

@@ -2,97 +2,316 @@
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
 
     <title>CivicAI - Report an Issue</title>
 
-    <link rel="stylesheet"
-          href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f3f6fa;
+            color: #102a43;
+        }
+
+        .navbar {
+            height: 80px;
+            background: white;
+            display: flex;
+            align-items: center;
+            padding: 0 8%;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        }
+
+        .logo {
+            font-size: 30px;
+            font-weight: bold;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 40px;
+            border-radius: 18px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.10);
+        }
+
+        h1 {
+            margin-top: 0;
+            font-size: 32px;
+        }
+
+        .subtitle {
+            color: #52606d;
+            font-size: 17px;
+            line-height: 1.5;
+            margin-bottom: 30px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-top: 20px;
+            margin-bottom: 8px;
+        }
+
+        textarea,
+        input[type="text"],
+        select {
+            display: block;
+            width: 100%;
+            padding: 13px;
+            border: 1px solid #bcccdc;
+            border-radius: 8px;
+            font-size: 16px;
+            background: white;
+        }
+
+        textarea {
+            min-height: 140px;
+            resize: vertical;
+        }
+
+        input[type="file"] {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #bcccdc;
+            border-radius: 8px;
+            background: white;
+        }
+
+        button {
+            display: block;
+            width: 100%;
+            margin-top: 30px;
+            padding: 16px;
+            border: none;
+            border-radius: 10px;
+            background: #1565c0;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #0d47a1;
+        }
+
+        .back {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #1565c0;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+    </style>
+
 </head>
+
 
 <body>
 
+
     <nav class="navbar">
 
-        <div class="logo">CivicAI</div>
-
-        <div class="nav-links">
-            <a href="/dashboard">Dashboard</a>
-            <a href="/login">Logout</a>
+        <div class="logo">
+            CivicAI
         </div>
 
     </nav>
 
 
-    <main class="dashboard-container">
+    <div class="container">
 
-        <div class="auth-card complaint-form-card">
+        <a href="/dashboard" class="back">
+            ← Back to Dashboard
+        </a>
 
-            <h2>Report a Civic Issue</h2>
+
+        <div class="card">
+
+            <h1>
+                Report a Civic Issue
+            </h1>
 
             <p class="subtitle">
-                Describe the problem clearly. CivicAI will analyze
-                your complaint and prioritize it.
+                Describe the problem clearly.
+                CivicAI will analyze your complaint
+                and prioritize it.
             </p>
 
 
-            <form onsubmit="submitComplaint(event)"></form>
+            <form
+                action="/submit-complaint"
+                method="POST">
 
-                <label>Complaint Description</label>
 
-                
-                <textarea
-                    id="description"
-                    rows="6"
-                    placeholder="Describe the issue in detail..."
-                    required></textarea>
-                   
-
-                <label>Location</label>
+                <!-- USER ID -->
 
                 <input
-                     id="location"
-                     type="text"
+                    type="hidden"
+                    name="user_id"
+                    id="user_id">
+
+
+                <!-- DESCRIPTION -->
+
+                <label for="description">
+                    Complaint Description
+                </label>
+
+                <textarea
+                    id="description"
+                    name="description"
+                    placeholder="Describe the issue in detail..."
+                    required></textarea>
+
+
+                <!-- LOCATION -->
+
+                <label for="location">
+                    Location
+                </label>
+
+                <input
+                    type="text"
+                    id="location"
+                    name="location"
                     placeholder="Enter the location"
                     required>
-                    
 
 
-                <label>Issue Category</label>
+                <!-- CATEGORY -->
 
-                <select>
+                <label for="category">
+                    Issue Category
+                </label>
 
-                    <option value="">Select category</option>
+                <select
+                    id="category"
+                    name="category">
 
-                    <option>Road</option>
-                    <option>Water</option>
-                    <option>Garbage</option>
-                    <option>Streetlight</option>
-                    <option>Public Safety</option>
-                    <option>Traffic</option>
-                    <option>Electricity</option>
-                    <option>Other</option>
+                    <option value="">
+                        Select category
+                    </option>
+
+                    <option value="Road">
+                        Road
+                    </option>
+
+                    <option value="Water">
+                        Water
+                    </option>
+
+                    <option value="Garbage">
+                        Garbage
+                    </option>
+
+                    <option value="Streetlight">
+                        Streetlight
+                    </option>
+
+                    <option value="Public Safety">
+                        Public Safety
+                    </option>
+
+                    <option value="Traffic">
+                        Traffic
+                    </option>
+
+                    <option value="Electricity">
+                        Electricity
+                    </option>
+
+                    <option value="Other">
+                        Other
+                    </option>
 
                 </select>
 
 
-                <label>Upload Evidence</label>
+                <!-- EVIDENCE -->
+
+                <label for="evidence">
+                    Upload Evidence
+                </label>
 
                 <input
                     type="file"
+                    id="evidence"
+                    name="evidence"
                     accept="image/*">
 
+
+                <!-- EVIDENCE FLAG -->
+
+                <input
+                    type="hidden"
+                    name="has_evidence"
+                    id="has_evidence"
+                    value="false">
+
+
+                <!-- SUBMIT -->
 
                 <button type="submit">
                     Submit Complaint
                 </button>
 
+
             </form>
 
         </div>
 
-    </main>
-<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    </div>
+
+
+    <script>
+
+        const userId =
+            localStorage.getItem("user_id");
+
+        document.getElementById("user_id").value =
+            userId || "";
+
+
+        const evidence =
+            document.getElementById("evidence");
+
+        evidence.addEventListener(
+            "change",
+            function() {
+
+                document.getElementById(
+                    "has_evidence"
+                ).value =
+                    evidence.files.length > 0
+                    ? "true"
+                    : "false";
+
+            }
+        );
+
+    </script>
+
+
 </body>
+
 </html>

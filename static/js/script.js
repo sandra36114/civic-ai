@@ -34,7 +34,7 @@ async function registerUser(event) {
             alert("Account created successfully!");
             window.location.href = "/";
         } else {
-            alert(data.message || "Registration failed.");
+            alert(data.message);
         }
 
     } catch (error) {
@@ -70,12 +70,14 @@ async function loginUser(event) {
 
         if (data.status === "success") {
 
+            // Save logged-in user information
             localStorage.setItem("user_id", data.user.id);
             localStorage.setItem("user_name", data.user.name);
             localStorage.setItem("user_role", data.user.role);
 
             alert("Login successful!");
 
+            // Send admin to admin dashboard
             if (data.user.role === "admin") {
                 window.location.href = "/admin";
             } else {
@@ -83,11 +85,11 @@ async function loginUser(event) {
             }
 
         } else {
-            alert(data.message || "Invalid email or password.");
+            alert(data.message);
         }
 
     } catch (error) {
-        console.error("Login error:", error);
+        console.error(error);
         alert("Unable to connect to CivicAI server.");
     }
 }
@@ -100,32 +102,36 @@ async function loginUser(event) {
 async function submitComplaint(event) {
     event.preventDefault();
 
-    const description = document.getElementById("description").value;
-    const location = document.getElementById("location").value;
-    const userId = localStorage.getItem("user_id");
+    const description =
+        document.getElementById("description").value;
 
-    const evidenceInput = document.getElementById("evidence");
-    const hasEvidence = evidenceInput
-        ? evidenceInput.files.length > 0
-        : false;
+    const location =
+        document.getElementById("location").value;
+
+    const userId =
+        localStorage.getItem("user_id") ||
+        JSON.parse(localStorage.getItem("user") || "{}").id;
 
     if (!userId) {
         alert("Please login first.");
-        window.location.href = "/";
+        window.location.href = "/login";
         return;
     }
 
     try {
+
         const response = await fetch("/api/complaints", {
             method: "POST",
+
             headers: {
                 "Content-Type": "application/json"
             },
+
             body: JSON.stringify({
-                user_id: Number(userId),
+                user_id: userId,
                 description: description,
                 location: location,
-                has_evidence: hasEvidence
+                has_evidence: document.getElementById("evidence")?.files.length > 0
             })
         });
 
@@ -133,21 +139,64 @@ async function submitComplaint(event) {
 
         if (data.status === "success") {
 
-            alert(
-                "Complaint submitted successfully!\n\n" +
-                "Category: " + data.ai_analysis.category + "\n" +
-                "Urgency: " + data.ai_analysis.urgency + "\n" +
-                "Priority: " + data.ai_analysis.priority + "/100"
-            );
+            alert("Complaint submitted successfully!");
 
-            window.location.href = "/dashboard";
+            window.location.href =
+                "/complaint-result/" + data.complaint_id;
 
         } else {
-            alert(data.message || "Complaint submission failed.");
+
+            alert(data.message);
         }
 
     } catch (error) {
-        console.error("Complaint error:", error);
+
+        console.error(error);
+
         alert("Unable to connect to CivicAI server.");
     }
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+    const loginForm = document.querySelector("form[data-login-form]");
+
+    if (!loginForm) return;
+
+    loginForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
+
+        const email = document.querySelector("#email").value;
+        const password = document.querySelector("#password").value;
+
+        try {
+            const response = await fetch("/api/login", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    email: email,
+                    password: password
+                })
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                alert("Login successful!");
+
+                // Save user information for later pages
+                localStorage.setItem("user", JSON.stringify(data.user));
+
+                window.location.href = "/dashboard";
+            } else {
+                alert(data.message || "Login failed.");
+            }
+
+        } catch (error) {
+            console.error(error);
+            alert("Could not connect to the server.");
+        }
+    });
+});
+
